@@ -38,7 +38,21 @@
         ],
     ];
 
-    
+
+    $data = $_GET;
+    $filteredHotels = [];
+
+    if(!empty($data)){
+        if(isset($data['parkingCheck']) && !empty($data['parkingCheck'])){
+            foreach($hotels as $hotel){
+                if($hotel['parking'] == true){
+                    $filteredHotels[] = $hotel;
+                }
+            }
+        }
+    } else {
+        $filteredHotels = $hotels;
+    }
 
 ?>
 
@@ -53,7 +67,19 @@
 </head>
 <body>
     
-<main class="container">
+<main class="container my-5">
+    <h1 class="mb-3 text-center">Hotel</h1>
+    <form class="d-flex justify-content-between border px-1 py-3 mb-3" action="index.php" method="GET">
+        <div>
+            <input type="checkbox" class="form-check-input" id="parkingCheck" name="parkingCheck" value="parkOnly">
+            <label class="form-check-label" for="parkingCheck">Mostra solo hotel con parcheggio</label>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Invia</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+        </div>
+    </form>
+
     <table class="table table-striped">
       <thead>
         <tr>
@@ -66,7 +92,7 @@
       </thead>
       <tbody>
             <?php
-                foreach($hotels as $hotel){
+                foreach($filteredHotels as $hotel){
                     echo "<tr>";
                     foreach($hotel as $info => $value){
                         switch ($info){
