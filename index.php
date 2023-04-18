@@ -40,18 +40,27 @@
 
 
     $data = $_GET;
-    $filteredHotels = [];
+    $filteredHotels = $hotels;
 
     if(!empty($data)){
         if(isset($data['parkingCheck']) && !empty($data['parkingCheck'])){
-            foreach($hotels as $hotel){
+            $filteredByPark = [];
+            foreach($filteredHotels as $hotel){
                 if($hotel['parking'] == true){
-                    $filteredHotels[] = $hotel;
+                    $filteredByPark[] = $hotel;
                 }
             }
+            $filteredHotels = $filteredByPark;
         }
-    } else {
-        $filteredHotels = $hotels;
+        if(isset($data['filterByRating']) && !empty($data['filterByRating'])){
+            $filteredByVote = [];
+            foreach($filteredHotels as $hotel){
+                if($hotel['vote'] >= $data['filterByRating']){
+                    $filteredByVote[] = $hotel;
+                }
+            }
+            $filteredHotels = $filteredByVote;
+        }
     }
 
 ?>
@@ -72,7 +81,17 @@
     <form class="d-flex justify-content-between border px-1 py-3 mb-3" action="index.php" method="GET">
         <div>
             <input type="checkbox" class="form-check-input" id="parkingCheck" name="parkingCheck" value="parkOnly">
-            <label class="form-check-label" for="parkingCheck">Mostra solo hotel con parcheggio</label>
+            <label class="form-check-label mb-4" for="parkingCheck">Mostra solo hotel con parcheggio</label>
+
+            <label class="form-label d-block" for="filterByRating">Filtra in base al voto</label>
+            <select name="filterByRating" id="filterByRating" class="form-select">
+                <option value="0">Non filtrare per voto</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </div>
         <div>
             <button type="submit" class="btn btn-primary">Invia</button>
